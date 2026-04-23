@@ -2,9 +2,9 @@
 
 **Цель:** настроить OSPF для UNDERLAY сети
 
-[Схема сети]() в PnetLab
+[Схема сети](../1.2%20-%20Building%20an%20Underlay%20Network%20(OSPF)/LAB_1_2.unl) в PnetLab
 
-[Конфигурации]() сетевых элементов
+[Конфигурации](../1.2%20-%20Building%20an%20Underlay%20Network%20(OSPF)/CFG.md) сетевых элементов
 
 # План работы
 
