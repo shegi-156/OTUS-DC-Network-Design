@@ -72,6 +72,8 @@
 
 ## Pnetlab
 
-Целевая топология с учетом адресации интерфейсов собрана в Pnetlab 
+Целевая топология с учетом адресации интерфейсов собрана в [Pnetlab](../1.1%20-%20Basics%20of%20network%20design/PnetLab/LAB_1_1.unl)
+
+[конфигурция](../1.1%20-%20Basics%20of%20network%20design/CFG.md) сетевых элементов
 
 ![Итоговая схема](../1.1%20-%20Basics%20of%20network%20design/Attached%20files/image2.png)
