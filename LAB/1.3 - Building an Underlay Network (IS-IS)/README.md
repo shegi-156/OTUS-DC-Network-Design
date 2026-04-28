@@ -217,7 +217,7 @@ DstAddr        MyDisc    YourDisc  Interface/Transport    Type          LastUp
          NA       No Diagnostic       Up
 ```
 
-Dсе соседства находятся в состоянии UP, проверяем IS-IS Database (для компактности примет только с DC1-SW3-SPINE1)
+Все соседства находятся в состоянии UP, проверяем IS-IS Database (для компактности примет только с DC1-SW3-SPINE1)
 
 ```
 DC1-SW3-SPINE1#show isis database detail
@@ -318,7 +318,7 @@ IS-IS Instance: 1 VRF: default
         Area leader priority: 250 algorithm: 0
 ```
 
-В IS-IS BD вся необходимая информация о соседях и доступных сетях присутствует, проверяем таблицу маршрутизации протокола IS-IS
+В IS-IS DB вся необходимая информация о соседях и доступных сетях присутствует, проверяем таблицу маршрутизации протокола IS-IS
 
 ```
 DC1-SW3-SPINE1#show ip route isis detail
