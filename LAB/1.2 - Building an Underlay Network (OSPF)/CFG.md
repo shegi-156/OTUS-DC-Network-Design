@@ -253,7 +253,7 @@ router ospf 1
 end
 ```
 
-# 
+# DC1-SW3-LEAF2
 
 ```
 ! Command: show running-config
@@ -332,7 +332,7 @@ router ospf 1
 end
 ```
 
-# 
+# DC1-SW3-LEAF3
 
 ```
 ! Command: show running-config
