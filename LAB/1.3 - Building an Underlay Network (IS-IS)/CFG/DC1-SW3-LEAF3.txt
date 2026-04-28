@@ -1,0 +1,80 @@
+! device: DC1-SW3-LEAF3 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname DC1-SW3-LEAF3
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   description DC1-SW3-SPINE1::Eth3
+   mtu 9000
+   no switchport
+   ip address 10.0.1.5/31
+   isis enable 1
+   isis metric profile MP_REF_BW_400
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2FxrkNYPBNNpn3hz5KblEA==
+!
+interface Ethernet2
+   description DC1-SW3-SPINE2::Eth3
+   mtu 9000
+   no switchport
+   ip address 10.0.1.11/31
+   isis enable 1
+   isis metric profile MP_REF_BW_400
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2FxrkNYPBNNpn3hz5KblEA==
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback0
+   description UNDERLAY
+   ip address 10.0.0.5/32
+   isis enable 1
+   isis passive
+!
+interface Management1
+   description DC1-SW-MGMT1
+   ip address 172.16.0.5/24
+!
+ip routing
+!
+router bfd
+   interval 100 min-rx 100 multiplier 3 default
+!
+router isis 1
+   net 49.0001.0100.0000.0005.00
+   is-hostname DC1-SW3-LEAF3
+   router-id ipv4 10.0.0.5
+   is-type level-2
+   set-overload-bit on-startup wait-for-bgp timeout 750
+   authentication mode md5
+   authentication key 7 2FxrkNYPBNNpn3hz5KblEA==
+   !
+   address-family ipv4 unicast
+      maximum-paths 4
+      bfd all-interfaces
+   !
+   metric profile MP_REF_BW_400
+      metric ratio 400 gbps
+!
+end
