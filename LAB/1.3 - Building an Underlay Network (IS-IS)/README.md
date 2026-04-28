@@ -348,7 +348,7 @@ Codes: C - connected, S - static, K - kernel,
 ```
 
 ```
-DC1-SW3-SPINE2#show ip route isis
+DC1-SW3-SPINE2#show ip route isis detail
 
 VRF: default
 Codes: C - connected, S - static, K - kernel,
@@ -363,20 +363,19 @@ Codes: C - connected, S - static, K - kernel,
        DP - Dynamic Policy Route, L - VRF Leaked,
        G  - gRIBI, RC - Route Cache Route
 
- I L2     10.0.0.1/32 [115/810] via 10.0.1.7, Ethernet1
-                                via 10.0.1.9, Ethernet2
-                                via 10.0.1.11, Ethernet3
- I L2     10.0.0.3/32 [115/410] via 10.0.1.7, Ethernet1
- I L2     10.0.0.4/32 [115/410] via 10.0.1.9, Ethernet2
- I L2     10.0.0.5/32 [115/410] via 10.0.1.11, Ethernet3
- I L2     10.0.1.0/31 [115/800] via 10.0.1.7, Ethernet1
- I L2     10.0.1.2/31 [115/800] via 10.0.1.9, Ethernet2
- I L2     10.0.1.4/31 [115/800] via 10.0.1.11, Ethernet3
-
+ I L2     10.0.0.1/32 [115/810] via 10.0.1.7, Ethernet1 DC1-SW3-LEAF1::Eth2
+                                via 10.0.1.9, Ethernet2 DC1-SW3-LEAF2::Eth2
+                                via 10.0.1.11, Ethernet3 DC1-SW3-LEAF3::Eth2
+ I L2     10.0.0.3/32 [115/410] via 10.0.1.7, Ethernet1 DC1-SW3-LEAF1::Eth2
+ I L2     10.0.0.4/32 [115/410] via 10.0.1.9, Ethernet2 DC1-SW3-LEAF2::Eth2
+ I L2     10.0.0.5/32 [115/410] via 10.0.1.11, Ethernet3 DC1-SW3-LEAF3::Eth2
+ I L2     10.0.1.0/31 [115/800] via 10.0.1.7, Ethernet1 DC1-SW3-LEAF1::Eth2
+ I L2     10.0.1.2/31 [115/800] via 10.0.1.9, Ethernet2 DC1-SW3-LEAF2::Eth2
+ I L2     10.0.1.4/31 [115/800] via 10.0.1.11, Ethernet3 DC1-SW3-LEAF3::Eth2
 ```
 
 ```
-DC1-SW3-LEAF1#show ip route isis
+DC1-SW3-LEAF1#show ip route isis detail
 
 VRF: default
 Codes: C - connected, S - static, K - kernel,
@@ -391,20 +390,20 @@ Codes: C - connected, S - static, K - kernel,
        DP - Dynamic Policy Route, L - VRF Leaked,
        G  - gRIBI, RC - Route Cache Route
 
- I L2     10.0.0.1/32 [115/410] via 10.0.1.0, Ethernet1
- I L2     10.0.0.2/32 [115/410] via 10.0.1.6, Ethernet2
- I L2     10.0.0.4/32 [115/810] via 10.0.1.0, Ethernet1
-                                via 10.0.1.6, Ethernet2
- I L2     10.0.0.5/32 [115/810] via 10.0.1.0, Ethernet1
-                                via 10.0.1.6, Ethernet2
- I L2     10.0.1.2/31 [115/800] via 10.0.1.0, Ethernet1
- I L2     10.0.1.4/31 [115/800] via 10.0.1.0, Ethernet1
- I L2     10.0.1.8/31 [115/800] via 10.0.1.6, Ethernet2
- I L2     10.0.1.10/31 [115/800] via 10.0.1.6, Ethernet2
+ I L2     10.0.0.1/32 [115/410] via 10.0.1.0, Ethernet1 DC1-SW3-SPINE1::Eth1
+ I L2     10.0.0.2/32 [115/410] via 10.0.1.6, Ethernet2 DC1-SW3-SPINE2::Eth1
+ I L2     10.0.0.4/32 [115/810] via 10.0.1.0, Ethernet1 DC1-SW3-SPINE1::Eth1
+                                via 10.0.1.6, Ethernet2 DC1-SW3-SPINE2::Eth1
+ I L2     10.0.0.5/32 [115/810] via 10.0.1.0, Ethernet1 DC1-SW3-SPINE1::Eth1
+                                via 10.0.1.6, Ethernet2 DC1-SW3-SPINE2::Eth1
+ I L2     10.0.1.2/31 [115/800] via 10.0.1.0, Ethernet1 DC1-SW3-SPINE1::Eth1
+ I L2     10.0.1.4/31 [115/800] via 10.0.1.0, Ethernet1 DC1-SW3-SPINE1::Eth1
+ I L2     10.0.1.8/31 [115/800] via 10.0.1.6, Ethernet2 DC1-SW3-SPINE2::Eth1
+ I L2     10.0.1.10/31 [115/800] via 10.0.1.6, Ethernet2 DC1-SW3-SPINE2::Eth1
 ```
 
 ```
-DC1-SW3-LEAF2#show ip route isis
+DC1-SW3-LEAF2#show ip route isis detail
 
 VRF: default
 Codes: C - connected, S - static, K - kernel,
@@ -419,20 +418,20 @@ Codes: C - connected, S - static, K - kernel,
        DP - Dynamic Policy Route, L - VRF Leaked,
        G  - gRIBI, RC - Route Cache Route
 
- I L2     10.0.0.1/32 [115/410] via 10.0.1.2, Ethernet1
- I L2     10.0.0.2/32 [115/410] via 10.0.1.8, Ethernet2
- I L2     10.0.0.3/32 [115/810] via 10.0.1.2, Ethernet1
-                                via 10.0.1.8, Ethernet2
- I L2     10.0.0.5/32 [115/810] via 10.0.1.2, Ethernet1
-                                via 10.0.1.8, Ethernet2
- I L2     10.0.1.0/31 [115/800] via 10.0.1.2, Ethernet1
- I L2     10.0.1.4/31 [115/800] via 10.0.1.2, Ethernet1
- I L2     10.0.1.6/31 [115/800] via 10.0.1.8, Ethernet2
- I L2     10.0.1.10/31 [115/800] via 10.0.1.8, Ethernet2
+ I L2     10.0.0.1/32 [115/410] via 10.0.1.2, Ethernet1 DC1-SW3-SPINE1::Eth2
+ I L2     10.0.0.2/32 [115/410] via 10.0.1.8, Ethernet2 DC1-SW3-SPINE2::Eth2
+ I L2     10.0.0.3/32 [115/810] via 10.0.1.2, Ethernet1 DC1-SW3-SPINE1::Eth2
+                                via 10.0.1.8, Ethernet2 DC1-SW3-SPINE2::Eth2
+ I L2     10.0.0.5/32 [115/810] via 10.0.1.2, Ethernet1 DC1-SW3-SPINE1::Eth2
+                                via 10.0.1.8, Ethernet2 DC1-SW3-SPINE2::Eth2
+ I L2     10.0.1.0/31 [115/800] via 10.0.1.2, Ethernet1 DC1-SW3-SPINE1::Eth2
+ I L2     10.0.1.4/31 [115/800] via 10.0.1.2, Ethernet1 DC1-SW3-SPINE1::Eth2
+ I L2     10.0.1.6/31 [115/800] via 10.0.1.8, Ethernet2 DC1-SW3-SPINE2::Eth2
+ I L2     10.0.1.10/31 [115/800] via 10.0.1.8, Ethernet2 DC1-SW3-SPINE2::Eth2
 ```
 
 ```
-DC1-SW3-LEAF3#show ip route isis
+DC1-SW3-LEAF3#show ip route isis detail
 
 VRF: default
 Codes: C - connected, S - static, K - kernel,
@@ -447,16 +446,16 @@ Codes: C - connected, S - static, K - kernel,
        DP - Dynamic Policy Route, L - VRF Leaked,
        G  - gRIBI, RC - Route Cache Route
 
- I L2     10.0.0.1/32 [115/410] via 10.0.1.4, Ethernet1
- I L2     10.0.0.2/32 [115/410] via 10.0.1.10, Ethernet2
- I L2     10.0.0.3/32 [115/810] via 10.0.1.4, Ethernet1
-                                via 10.0.1.10, Ethernet2
- I L2     10.0.0.4/32 [115/810] via 10.0.1.4, Ethernet1
-                                via 10.0.1.10, Ethernet2
- I L2     10.0.1.0/31 [115/800] via 10.0.1.4, Ethernet1
- I L2     10.0.1.2/31 [115/800] via 10.0.1.4, Ethernet1
- I L2     10.0.1.6/31 [115/800] via 10.0.1.10, Ethernet2
- I L2     10.0.1.8/31 [115/800] via 10.0.1.10, Ethernet2
+ I L2     10.0.0.1/32 [115/410] via 10.0.1.4, Ethernet1 DC1-SW3-SPINE1::Eth3
+ I L2     10.0.0.2/32 [115/410] via 10.0.1.10, Ethernet2 DC1-SW3-SPINE2::Eth3
+ I L2     10.0.0.3/32 [115/810] via 10.0.1.4, Ethernet1 DC1-SW3-SPINE1::Eth3
+                                via 10.0.1.10, Ethernet2 DC1-SW3-SPINE2::Eth3
+ I L2     10.0.0.4/32 [115/810] via 10.0.1.4, Ethernet1 DC1-SW3-SPINE1::Eth3
+                                via 10.0.1.10, Ethernet2 DC1-SW3-SPINE2::Eth3
+ I L2     10.0.1.0/31 [115/800] via 10.0.1.4, Ethernet1 DC1-SW3-SPINE1::Eth3
+ I L2     10.0.1.2/31 [115/800] via 10.0.1.4, Ethernet1 DC1-SW3-SPINE1::Eth3
+ I L2     10.0.1.6/31 [115/800] via 10.0.1.10, Ethernet2 DC1-SW3-SPINE2::Eth3
+ I L2     10.0.1.8/31 [115/800] via 10.0.1.10, Ethernet2 DC1-SW3-SPINE2::Eth3
 ```
 
 Доступность адресов lo через равноценные линки имеется
