@@ -12,7 +12,7 @@
 
 ## Тестовая среда
 
-Схема сети в [PnetLab](../1.4%20-%20Building%20an%20Overlay%20Network%20(eBGP)/PnetLab/LAB_1_3.uni)
+Схема сети в [PnetLab](../1.4%20-%20Building%20an%20Overlay%20Network%20(eBGP)/PnetLab/LAB_1_3.unl)
 ![Схема сети](../1.3%20-%20Building%20an%20Underlay%20Network%20(IS-IS)/Attached%20files/LAB_1_3.png)
 
 Конфигурации сетевых элементов:
