@@ -374,7 +374,7 @@ Codes: C - connected, S - static, K - kernel,
 
 ---
 
-Далее проверяем L3 связность до между LO
+Далее проверяем L3 связность между LO
 
 *DC1-SW3-LEAF1 <> DC1-SW3-LEAF3*
 
