@@ -1,0 +1,74 @@
+! device: DC1-SW3-SPINE2 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname DC1-SW3-SPINE2
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   description DC1-SW3-LEAF1::Eth2
+   mtu 9000
+   no switchport
+   ip address 10.0.1.6/31
+!
+interface Ethernet2
+   description DC1-SW3-LEAF2::Eth2
+   mtu 9000
+   no switchport
+   ip address 10.0.1.8/31
+!
+interface Ethernet3
+   description DC1-SW3-LEAF3::Eth2
+   mtu 9000
+   no switchport
+   ip address 10.0.1.10/31
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Loopback0
+   description UNDERLAY
+   ip address 10.0.0.2/32
+!
+interface Management1
+   description DC1-SW-MGMT1
+   ip address 172.16.0.2/24
+!
+ip routing
+!
+peer-filter PF_LEAF
+   10 match as-range 64513-65534 result accept
+!
+router bfd
+   interval 100 min-rx 100 multiplier 3 default
+!
+router bgp 64512
+   router-id 10.0.0.2
+   no bgp default ipv4-unicast
+   timers bgp 3 9
+   maximum-paths 4 ecmp 4
+   bgp listen range 10.0.1.0/24 peer-group PG_LEAF peer-filter PF_LEAF
+   neighbor PG_LEAF peer group
+   neighbor PG_LEAF bfd
+   neighbor PG_LEAF password 7 z+yWsJee8ho4Ju8e6CN9sg==
+   neighbor PG_LEAF send-community standard extended large
+   !
+   address-family ipv4
+      neighbor PG_LEAF activate
+      network 10.0.0.2/32
+!
+end
