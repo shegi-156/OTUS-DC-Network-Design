@@ -1,4 +1,4 @@
-# Построение Underlay сети (BGP)
+# Построение OVERLAY сети (VxLAN. EVPN L3)
 
 ## Цель работы 
 

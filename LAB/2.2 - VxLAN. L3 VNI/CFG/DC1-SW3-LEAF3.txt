@@ -117,7 +117,6 @@ router bgp 64515
    address-family ipv4
       neighbor PG_SPINE activate
       network 10.0.0.5/32
-      redistribute connected
    !
    vrf CST1
       route-target import evpn 1:13
