@@ -8,8 +8,6 @@ transceiver qsfp default-mode 4x10G
 !
 service routing protocols model multi-agent
 !
-logging monitor informational
-!
 hostname DC1-SW3-SPINE1
 !
 spanning-tree mode mstp
