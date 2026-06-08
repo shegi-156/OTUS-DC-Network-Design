@@ -6,25 +6,24 @@
 
 ## План работы
 
-- Настроить клиентов (VNI, маршрутизация между клиентами)
+- Настроить клиентов (VNI, коммутацию между клиентами)
 - Проверить связность между клиентами
 
-## Тестовая среда !!!!!!!!!!!!!
+## Тестовая среда 
+Схема сети в [PnetLab](../2.1%20-%20VxLAN.%20L2%20VNI/Attached%20files/LAB_2_1%20EVPN%20L2.unl)
 
-Схема сети в [PnetLab](../2.2%20-%20VxLAN.%20L3%20VNI/Attached%20files/LAB_1_3%20EVPN%20L3.unl)
-
-![Схема сети](../2.2%20-%20VxLAN.%20L3%20VNI/Attached%20files/LAB_2-2.png)
+![Схема сети](../2.1%20-%20VxLAN.%20L2%20VNI/Attached%20files/LAB_2_1%20EVPN%20L2.png)
 Конфигурации сетевых элементов:
 
-[DC1-SW3-LEAF1](../2.2%20-%20VxLAN.%20L3%20VNI/CFG/DC1-SW3-LEAF1.txt)
+[DC1-SW3-LEAF1](../2.1%20-%20VxLAN.%20L2%20VNI/CFG/DC1-SW3-LEAF1.txt)
 
-[DC1-SW3-LEAF2](../2.2%20-%20VxLAN.%20L3%20VNI/CFG/DC1-SW3-LEAF2.txt)
+[DC1-SW3-LEAF2](../2.1%20-%20VxLAN.%20L2%20VNI/CFG/DC1-SW3-LEAF2.txt)
 
-[DC1-SW3-LEAF3](../2.2%20-%20VxLAN.%20L3%20VNI/CFG/DC1-SW3-LEAF3.txt)
+[DC1-SW3-LEAF3](../2.1%20-%20VxLAN.%20L2%20VNI/CFG/DC1-SW3-LEAF3.txt)
 
-[DC1-SW3-SPINE1](../2.2%20-%20VxLAN.%20L3%20VNI/CFG/DC1-SW3-SPINE1.txt)
+[DC1-SW3-SPINE1](../2.1%20-%20VxLAN.%20L2%20VNI/CFG/DC1-SW3-SPINE1.txt)
 
-[DC1-SW3-SPINE2](../2.2%20-%20VxLAN.%20L3%20VNI/CFG/DC1-SW3-SPINE2.txt)
+[DC1-SW3-SPINE2](../2.1%20-%20VxLAN.%20L2%20VNI/CFG/DC1-SW3-SPINE2.txt)
 
 
 
@@ -35,8 +34,11 @@
 для клиента CST1 (два сервиса - VLAN 100,200) используем VLAN Aware Bundle Service, 
 для клиента CST2 (один сервис - VLAN 300) используем VLAN Based Service
 
+Принято решение Underlay оставить на eBGP из предыдущей лабораторной работы
 
+*BFD отключен намеренно, в рамках тестовой среды не принципиально его наличие (При большом количестве устройств в стенде PNETLAB начинают флапать BFD сесии и BGP рвется)*
 
+Строим EVPN BGP сессии между loopback адресами
 
 > в качестве примера LEAF выступает DC1-SW3-LEAF1
 
@@ -47,16 +49,20 @@ vlan 100
 vlan 200
    name [cvlan:200][cst:1][svc:2]
 !
-vrf instance CST1
-   description [cst:1][svc:3]
+vlan 300
+   name [svlan:300][cst:2][svc:1]
 !
-interface Vlan100
-   vrf CST1
-   ip address virtual 192.168.100.1/24
+interface Ethernet6
+   description [dev:DC1-SR-NODE6][int:ETH0]
+   switchport access vlan 200
 !
-interface Vlan200
-   vrf CST1
-   ip address virtual 192.168.200.1/24
+interface Ethernet7
+   description [dev:DC1-SR-NODE5][int:ETH0]
+   switchport access vlan 300
+!
+interface Ethernet8
+   description [dev:DC1-SR-NODE1][int:ETH0]
+   switchport access vlan 100
 !
 interface Vxlan1
    vxlan source-interface Loopback0
@@ -64,24 +70,31 @@ interface Vxlan1
    vxlan vlan 100 vni 20100
    vxlan vlan 200 vni 20200
    vxlan vlan 300 vni 20300
-   vxlan vrf CST1 vni 30003
-!
-ip virtual-router mac-address 00:00:00:00:11:11
-!
-ip routing vrf CST1
 !
 router bgp 64513
+   neighbor PG_SPINE_EVPN peer group
+   neighbor PG_SPINE_EVPN remote-as 64512
+   neighbor PG_SPINE_EVPN update-source Loopback0
+   neighbor PG_SPINE_EVPN ebgp-multihop 3
+   neighbor PG_SPINE_EVPN send-community extended
+   neighbor 10.0.0.1 peer group PG_SPINE_EVPN
+   neighbor 10.0.0.1 description [dev:DC1-SW3-SPINE1]#EVPN#
+   neighbor 10.0.0.2 peer group PG_SPINE_EVPN
+   neighbor 10.0.0.2 description [dev:DC1-SW3-SPINE2]#EVPN#
+   !
+   vlan 300
+      rd 10.0.0.3:2
+      route-target both 1:22
+      redistribute learned
+   !
    vlan-aware-bundle CST1
       rd 10.0.0.3:1
       route-target both 1:11
       redistribute learned
       vlan 100,200
-   !   
-   vrf CST1
-      rd 10.0.0.3:1
-      route-target import evpn 1:13
-      route-target export evpn 1:13
-      redistribute connected
+   !
+   address-family evpn
+      neighbor PG_SPINE_EVPN activate
 !
 ```
 

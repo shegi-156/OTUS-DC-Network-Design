@@ -1,3 +1,4 @@
+! Command: show running-config
 ! device: DC1-SW3-LEAF1 (vEOS-lab, EOS-4.29.2F)
 !
 ! boot system flash:/vEOS-lab.swi
@@ -112,5 +113,8 @@ router bgp 64513
    address-family ipv4
       neighbor PG_SPINE activate
       network 10.0.0.3/32
+   !
+   address-family rt-membership
+      neighbor PG_SPINE_EVPN activate
 !
 end

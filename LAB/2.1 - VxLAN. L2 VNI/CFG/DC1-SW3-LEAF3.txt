@@ -105,5 +105,8 @@ router bgp 64515
       neighbor PG_SPINE activate
       network 10.0.0.5/32
    !
+   address-family rt-membership
+      neighbor PG_SPINE_EVPN activate
+   !
 !
 end

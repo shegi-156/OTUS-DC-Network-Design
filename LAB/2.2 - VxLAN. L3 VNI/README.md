@@ -11,7 +11,7 @@
 
 ## Тестовая среда
 
-Схема сети в [PnetLab](../2.2%20-%20VxLAN.%20L3%20VNI/Attached%20files/LAB_1_3%20EVPN%20L3.unl)
+Схема сети в [PnetLab](../2.2%20-%20VxLAN.%20L3%20VNI/Attached%20files/LAB_2_2%20EVPN%20L3.unl)
 
 ![Схема сети](../2.2%20-%20VxLAN.%20L3%20VNI/Attached%20files/LAB_2-2.png)
 Конфигурации сетевых элементов:
