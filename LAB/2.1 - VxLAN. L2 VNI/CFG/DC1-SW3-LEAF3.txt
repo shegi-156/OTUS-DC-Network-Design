@@ -57,13 +57,10 @@ interface Management1
 interface Vxlan1
    vxlan source-interface Loopback0
    vxlan udp-port 4789
-   vxlan vlan 100 vni 20100
-   vxlan vlan 200 vni 20200
-!
-ip virtual-router mac-address 00:00:00:00:11:11
+   vxlan vlan 100 vni 1
+   vxlan vlan 200 vni 2
 !
 ip routing
-ip routing vrf CST1
 !
 router bfd
    interval 100 min-rx 100 multiplier 3 default
@@ -94,7 +91,7 @@ router bgp 64515
    !
    vlan-aware-bundle CST1
       rd 10.0.0.5:1
-      route-target both 1:11
+      route-target both 64512:1
       redistribute learned
       vlan 100,200
    !
@@ -107,6 +104,5 @@ router bgp 64515
    !
    address-family rt-membership
       neighbor PG_SPINE_EVPN activate
-   !
 !
 end
