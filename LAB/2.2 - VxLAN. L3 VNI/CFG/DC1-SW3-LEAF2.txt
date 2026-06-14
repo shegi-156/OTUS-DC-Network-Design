@@ -71,6 +71,8 @@ interface Vxlan1
    vxlan vlan 300 vni 3
    vxlan vlan 400 vni 5
 !
+ip virtual-router mac-address 00:00:00:00:11:11
+!
 ip routing
 ip routing vrf CST2
 !
