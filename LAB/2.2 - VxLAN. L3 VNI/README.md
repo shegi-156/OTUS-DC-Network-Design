@@ -53,7 +53,7 @@ RT = SPINE-AS+порядковый id
 | 2 | [cst:1][svc:2] | vlan 200 |
 | 3 | [cst:2][svc:1] | vlan 300 |
 | 4 | [cst:1][svc:3] | vrf CST1 |
-| 5 | [cst:1][svc:2] | vlan 200 |
+| 5 | [cst:2][svc:2] | vlan 400 |
 
 | RD | RT | Service | Description |
 | --- | --- | --- | --- |
