@@ -25,9 +25,10 @@ vlan 400
    name [ctag:400][cst:1][svc:2]
 !
 vrf instance CST1
-   description [cst:1][svc:3]
+   description [cst:1]#SYMMETRIC-IRB#
 !
 vrf instance CST2
+   description [cst:2]#ASYMMETRIC-IRB#
 !
 interface Ethernet1
    description [dev:DC1-SW3-SPINE1][int:ETH1]
@@ -64,7 +65,7 @@ interface Loopback0
    ip address 10.0.0.3/32
 !
 interface Management1
-   description [dev:DC1-SW-MGMT1}
+   description [dev:DC1-SW-MGMT1]
    ip address 172.16.0.3/24
 !
 interface Vlan100

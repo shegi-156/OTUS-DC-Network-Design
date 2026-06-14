@@ -19,7 +19,7 @@ vlan 200
    name [ctag:200][sct:1][svc:2]
 !
 vrf instance CST1
-   description [cst:1][svc:3]
+   description [cst:1]#SYMMETRIC-IRB#
 !
 interface Ethernet1
    description [dev:DC1-SW3-SPINE1][int:ETH3]

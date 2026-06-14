@@ -19,6 +19,7 @@ vlan 400
    name [ctag:400][cst:1][svc:2]
 !
 vrf instance CST2
+   description [cst:2]#ASYMMETRIC-IRB#
 !
 interface Ethernet1
    description [dev:DC1-SW3-SPINE1][int:ETH2]
