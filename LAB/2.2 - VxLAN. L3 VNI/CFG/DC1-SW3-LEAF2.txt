@@ -15,6 +15,11 @@ spanning-tree mode mstp
 vlan 300
    name [ctag:300][sct:2][svc:1]
 !
+vlan 400
+   name [ctag:400][cst:1][svc:2]
+!
+vrf instance CST2
+!
 interface Ethernet1
    description [dev:DC1-SW3-SPINE1][int:ETH2]
    mtu 9000
@@ -36,6 +41,8 @@ interface Ethernet5
 interface Ethernet6
 !
 interface Ethernet7
+   description [dev:DC1-SR-NODE7][int:ETH0]
+   switchport access vlan 400
 !
 interface Ethernet8
    description [dev:DC1-SR-NODE2][int:ETH0]
@@ -49,12 +56,22 @@ interface Management1
    description [dev:DC1-SW-MGMT1}
    ip address 172.16.0.4/24
 !
+interface Vlan300
+   vrf CST2
+   ip address virtual 192.168.33.1/24
+!
+interface Vlan400
+   vrf CST2
+   ip address virtual 192.168.44.1/24
+!
 interface Vxlan1
    vxlan source-interface Loopback0
    vxlan udp-port 4789
-   vxlan vlan 300 vni 20300
+   vxlan vlan 300 vni 3
+   vxlan vlan 400 vni 5
 !
 ip routing
+ip routing vrf CST2
 !
 router bfd
    interval 100 min-rx 100 multiplier 3 default
@@ -85,7 +102,12 @@ router bgp 64514
    !
    vlan 300
       rd 10.0.0.4:2
-      route-target both 1:22
+      route-target both 64512:2
+      redistribute learned
+   !
+   vlan 400
+      rd 10.0.0.4:4
+      route-target both 64512:4
       redistribute learned
    !
    address-family evpn
@@ -94,5 +116,8 @@ router bgp 64514
    address-family ipv4
       neighbor PG_SPINE activate
       network 10.0.0.4/32
+   !
+   address-family rt-membership
+      neighbor PG_SPINE_EVPN activate
 !
 end

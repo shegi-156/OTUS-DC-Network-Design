@@ -68,10 +68,9 @@ interface Vlan200
 interface Vxlan1
    vxlan source-interface Loopback0
    vxlan udp-port 4789
-   vxlan vlan 100 vni 20100
-   vxlan vlan 200 vni 20200
-   vxlan vrf CST1 vni 30003
-   vxlan vrf CST1_SVC2 vni 2002
+   vxlan vlan 100 vni 1
+   vxlan vlan 200 vni 2
+   vxlan vrf CST1 vni 4
 !
 ip virtual-router mac-address 00:00:00:00:11:11
 !
@@ -107,7 +106,7 @@ router bgp 64515
    !
    vlan-aware-bundle CST1
       rd 10.0.0.5:1
-      route-target both 1:11
+      route-target both 64512:1
       redistribute learned
       vlan 100,200
    !
@@ -118,9 +117,13 @@ router bgp 64515
       neighbor PG_SPINE activate
       network 10.0.0.5/32
    !
+   address-family rt-membership
+      neighbor PG_SPINE_EVPN activate
+   !
    vrf CST1
-      route-target import evpn 1:13
-      route-target export evpn 1:13
+      rd 10.0.0.5:3
+      route-target import evpn 64512:3
+      route-target export evpn 64512:3
       redistribute connected
 !
 end
