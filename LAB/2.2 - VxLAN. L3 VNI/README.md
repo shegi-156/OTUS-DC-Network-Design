@@ -324,9 +324,9 @@ AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Li
                                  -                     -       -       0       i
  * >      RD: 10.0.0.3:2 mac-ip 0050.7966.6805 192.168.33.5
                                  -                     -       -       0       i
+```
 
 для ассиметричного IRB маршрутизация на основании mac+ip маршрутов в L2VNI
-```
 
 
 
