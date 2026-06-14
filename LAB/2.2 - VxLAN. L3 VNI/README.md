@@ -329,6 +329,71 @@ AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Li
 для ассиметричного IRB маршрутизация на основании mac+ip маршрутов в L2VNI
 
 
+**DC1-SW3-LEAF2**
+
+```
+DC1-SW3-LEAF2#show bgp evpn route-type mac-ip vni 3
+BGP routing table information for VRF default
+Router identifier 10.0.0.4, local AS number 64514
+Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
+                    c - Contributing to ECMP, % - Pending BGP convergence
+Origin codes: i - IGP, e - EGP, ? - incomplete
+AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
+
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >      RD: 10.0.0.4:2 mac-ip 0050.7966.6802
+                                 -                     -       -       0       i
+ * >      RD: 10.0.0.4:2 mac-ip 0050.7966.6802 192.168.33.2
+                                 -                     -       -       0       i
+ * >Ec    RD: 10.0.0.3:2 mac-ip 0050.7966.6805
+                                 10.0.0.3              -       100     0       64512 64513 i
+ *  ec    RD: 10.0.0.3:2 mac-ip 0050.7966.6805
+                                 10.0.0.3              -       100     0       64512 64513 i
+ * >Ec    RD: 10.0.0.3:2 mac-ip 0050.7966.6805 192.168.33.5
+                                 10.0.0.3              -       100     0       64512 64513 i
+ *  ec    RD: 10.0.0.3:2 mac-ip 0050.7966.6805 192.168.33.5
+                                 10.0.0.3              -       100     0       64512 64513 i
+DC1-SW3-LEAF2#show bgp evpn route-type mac-ip vni 5
+BGP routing table information for VRF default
+Router identifier 10.0.0.4, local AS number 64514
+Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
+                    c - Contributing to ECMP, % - Pending BGP convergence
+Origin codes: i - IGP, e - EGP, ? - incomplete
+AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
+
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >      RD: 10.0.0.4:4 mac-ip 0050.7966.680c
+                                 -                     -       -       0       i
+ * >      RD: 10.0.0.4:4 mac-ip 0050.7966.680c 192.168.44.2
+                                 -                     -       -       0       i
+```
+
+**DC1-SW3-LEAF3**
+
+```
+DC1-SW3-LEAF3#show bgp evpn route-type mac-ip vni 4
+BGP routing table information for VRF default
+Router identifier 10.0.0.5, local AS number 64515
+Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
+                    c - Contributing to ECMP, % - Pending BGP convergence
+Origin codes: i - IGP, e - EGP, ? - incomplete
+AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
+
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >Ec    RD: 10.0.0.3:1 mac-ip 1 0050.7966.6801 192.168.100.11
+                                 10.0.0.3              -       100     0       64512 64513 i
+ *  ec    RD: 10.0.0.3:1 mac-ip 1 0050.7966.6801 192.168.100.11
+                                 10.0.0.3              -       100     0       64512 64513 i
+ * >      RD: 10.0.0.5:1 mac-ip 1 0050.7966.6804 192.168.100.4
+                                 -                     -       -       0       i
+ * >      RD: 10.0.0.5:1 mac-ip 2 0050.7966.6803 192.168.200.3
+                                 -                     -       -       0       i
+ * >Ec    RD: 10.0.0.3:1 mac-ip 2 0050.7966.6806 192.168.200.6
+                                 10.0.0.3              -       100     0       64512 64513 i
+ *  ec    RD: 10.0.0.3:1 mac-ip 2 0050.7966.6806 192.168.200.6
+                                 10.0.0.3              -       100     0       64512 64513 i
+```
+
 
 ## Дамп трафика
 
