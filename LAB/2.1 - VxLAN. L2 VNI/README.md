@@ -226,7 +226,7 @@ Vxlan1 is up, line protocol is up (connected)
    300 10.0.0.4
 ```
 
-**DC1-SW3-LEAF**
+**DC1-SW3-LEAF2**
 
 ```
 DC1-SW3-LEAF2#show interfaces vxlan 1
