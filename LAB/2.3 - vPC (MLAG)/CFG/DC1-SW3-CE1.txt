@@ -1,0 +1,60 @@
+! device: DC1-SW3-CE1 (vEOS-lab, EOS-4.29.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname DC1-SW3-CE1
+!
+spanning-tree mode mstp
+!
+vlan 100,200
+!
+vrf instance 100
+!
+vrf instance 200
+!
+interface Port-Channel1
+   switchport trunk allowed vlan 100,200
+   switchport mode trunk
+!
+interface Ethernet1
+   channel-group 1 mode active
+!
+interface Ethernet2
+   channel-group 1 mode active
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+!
+interface Ethernet8
+!
+interface Management1
+!
+interface Vlan100
+   vrf 100
+   ip address 192.168.100.10/24
+!
+interface Vlan200
+   vrf 200
+   ip address 192.168.200.10/24
+!
+ip routing
+ip routing vrf 100
+ip routing vrf 200
+!
+ip route vrf 100 0.0.0.0/0 192.168.100.1
+ip route vrf 200 0.0.0.0/0 192.168.200.1
+!
+end

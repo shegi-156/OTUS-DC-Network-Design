@@ -11,6 +11,7 @@ service routing protocols model multi-agent
 hostname DC1-SW3-LEAF1
 !
 spanning-tree mode mstp
+no spanning-tree vlan-id 4000
 !
 vlan 100
    name [cvlan:100][cst:1][svc:1]
@@ -18,12 +19,26 @@ vlan 100
 vlan 200
    name [cvlan:200][cst:1][svc:2]
 !
+vlan 4000
+   name [cvlan:4000][tech:MLAG]#PEER-VLA
+!
 vrf instance CST1
    description [cst:1]#SYMMETRIC-IRB#
 !
+vrf instance MLAG
+   description [tech:MLAG]#KEEPALIVE#
+!
 interface Port-Channel1
    description [dev:DC1-SW3-LEAF2][int:PO1]#MLAG_PEER-LINK#
+   switchport trunk allowed vlan 4000
    switchport mode trunk
+   spanning-tree link-type point-to-point
+!
+interface Port-Channel2
+   description [dev:DC1-SW3-CE1][int:PO1]#UNI#
+   switchport trunk allowed vlan 100,200
+   switchport mode trunk
+   mlag 1
 !
 interface Ethernet1
    description [dev:DC1-SW3-SPINE1][int:ETH1]#NNI#
@@ -47,6 +62,9 @@ interface Ethernet4
 !
 interface Ethernet5
    description [dev:DC1-SW3-LEAF2][int:ETH5]#MLAG_KEEPALIVE#
+   no switchport
+   vrf MLAG
+   ip address 172.16.1.1/31
 !
 interface Ethernet6
 !
@@ -54,6 +72,7 @@ interface Ethernet7
 !
 interface Ethernet8
    description [dev:DC1-SW-CE1][int:ETH1]#MLAG_PO2#
+   channel-group 2 mode active
 !
 interface Loopback0
    description #UNDERLAY#
@@ -69,6 +88,10 @@ interface Vlan200
    vrf CST1
    ip address virtual 192.168.200.1/24
 !
+interface Vlan4000
+   description [cvlan:4000][tech:MLAG]#MLAG_PEER-ADDRESS#
+   ip address 172.16.0.1/31
+!
 interface Vxlan1
    vxlan source-interface Loopback0
    vxlan udp-port 4789
@@ -80,6 +103,15 @@ ip virtual-router mac-address 00:00:00:00:11:11
 !
 ip routing
 ip routing vrf CST1
+ip routing vrf MLAG
+!
+mlag configuration
+   domain-id DC1-SW3-LEAF1-2
+   local-interface Vlan4000
+   peer-address 172.16.0.0
+   peer-address heartbeat 172.16.1.0 vrf MLAG
+   peer-link Port-Channel1
+   dual-primary detection delay 1 action errdisable all-interfaces
 !
 router bfd
    interval 100 min-rx 100 multiplier 3 default

@@ -8,6 +8,9 @@ transceiver qsfp default-mode 4x10G
 !
 service routing protocols model multi-agent
 !
+link tracking group CORE-TRACKING
+   recovery delay 1
+!
 hostname DC1-SW3-LEAF4
 !
 spanning-tree mode mstp
@@ -20,6 +23,17 @@ vlan 200
 !
 vrf instance CST1
    description [cst:1]#SYMMETRIC-IRB#
+!
+interface Port-Channel1
+   description [dev:DC1-SW3-CE2][int:PO1]#UNI#
+   switchport trunk allowed vlan 100,200
+   switchport mode trunk
+   !
+   evpn ethernet-segment
+      identifier 0000:0000:0000:0000:1111
+      designated-forwarder election algorithm preference 90
+      route-target import 00:00:00:00:00:01
+   lacp system-id 1234.1234.1234
 !
 interface Ethernet1
    description [dev:DC1-SW3-SPINE1][int:ETH4]#NNI#
@@ -45,6 +59,7 @@ interface Ethernet7
 !
 interface Ethernet8
    description [dev:DC1-SW-CE2][int:ETH2]#MLAG_PO2#
+   channel-group 1 mode active
 !
 interface Loopback0
    description #UNDERLAY#
