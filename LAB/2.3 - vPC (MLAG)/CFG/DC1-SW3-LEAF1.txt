@@ -20,13 +20,10 @@ vlan 200
    name [cvlan:200][cst:1][svc:2]
 !
 vlan 4000
-   name [cvlan:4000][tech:MLAG]#PEER-VLA
+   name [cvlan:4000][tech:MLAG]#PEERVLAN
 !
 vrf instance CST1
    description [cst:1]#SYMMETRIC-IRB#
-!
-vrf instance MLAG
-   description [tech:MLAG]#KEEPALIVE#
 !
 interface Port-Channel1
    description [dev:DC1-SW3-LEAF2][int:PO1]#MLAG_PEER-LINK#
@@ -63,28 +60,37 @@ interface Ethernet4
 interface Ethernet5
    description [dev:DC1-SW3-LEAF2][int:ETH5]#MLAG_KEEPALIVE#
    no switchport
-   vrf MLAG
    ip address 172.16.1.1/31
 !
 interface Ethernet6
+   description #FREE#
+   shutdown
 !
 interface Ethernet7
+   description #FREE#
+   shutdown
 !
 interface Ethernet8
    description [dev:DC1-SW-CE1][int:ETH1]#MLAG_PO2#
    channel-group 2 mode active
 !
 interface Loopback0
-   description #UNDERLAY#
+   description #VTEP#
    ip address 10.0.0.3/32
+!
+interface Loopback1
+   description #SHARED_VTEP#
+   ip address 10.0.0.7/32
 !
 interface Management1
 !
 interface Vlan100
+   description [cvlan:100][cst:1][svc:1]#Anycast_GW#
    vrf CST1
    ip address virtual 192.168.100.1/24
 !
 interface Vlan200
+   description [cvlan:200][cst:1][svc:2]#Anycast_GW#
    vrf CST1
    ip address virtual 192.168.200.1/24
 !
@@ -93,7 +99,7 @@ interface Vlan4000
    ip address 172.16.0.1/31
 !
 interface Vxlan1
-   vxlan source-interface Loopback0
+   vxlan source-interface Loopback1
    vxlan udp-port 4789
    vxlan vlan 100 vni 1
    vxlan vlan 200 vni 2
@@ -103,15 +109,16 @@ ip virtual-router mac-address 00:00:00:00:11:11
 !
 ip routing
 ip routing vrf CST1
-ip routing vrf MLAG
 !
 mlag configuration
    domain-id DC1-SW3-LEAF1-2
    local-interface Vlan4000
    peer-address 172.16.0.0
-   peer-address heartbeat 172.16.1.0 vrf MLAG
+   peer-address heartbeat 172.16.1.1
    peer-link Port-Channel1
    dual-primary detection delay 1 action errdisable all-interfaces
+   dual-primary recovery delay mlag 60 non-mlag 0
+   reload-delay mlag 60
 !
 router bfd
    interval 100 min-rx 100 multiplier 3 default
@@ -122,6 +129,9 @@ router bgp 64513
    timers bgp 3 9
    distance bgp 20 200 200
    maximum-paths 4 ecmp 4
+   neighbor PG_LEAF_MLAG peer group
+   neighbor PG_LEAF_MLAG remote-as 64513
+   neighbor PG_LEAF_MLAG next-hop-self
    neighbor PG_SPINE peer group
    neighbor PG_SPINE remote-as 64512
    neighbor PG_SPINE password 7 3ZMHuSYHdBchNfOxO2nKBg==
@@ -139,6 +149,8 @@ router bgp 64513
    neighbor 10.0.1.0 description [dev:DC1-SW3-SPINE1]#P2P#
    neighbor 10.0.1.6 peer group PG_SPINE
    neighbor 10.0.1.6 description [dev:DC1-SW3-SPINE2]#P2P#
+   neighbor 172.16.0.0 peer group PG_LEAF_MLAG
+   neighbor 172.16.0.0 description [dev:DC1-SW3-LEAF2]#MLAG-PEER#
    !
    vlan-aware-bundle CST1
       rd 10.0.0.3:1
@@ -150,8 +162,10 @@ router bgp 64513
       neighbor PG_SPINE_EVPN activate
    !
    address-family ipv4
+      neighbor PG_LEAF_MLAG activate
       neighbor PG_SPINE activate
       network 10.0.0.3/32
+      network 10.0.0.7/32
    !
    address-family rt-membership
       neighbor PG_SPINE_EVPN activate

@@ -73,7 +73,11 @@ RT = SPINE_AS + порядковый id
 
 # Настройка
 
-## MLAG
+## MLAG пара
+
+> на примере DC1-SW3-LEAF1 (DC1-SW3-LEAF2 настраивается аналогично)
+
+### MLAG
 
 Создадим отдельный технологический VRF
 
@@ -130,11 +134,7 @@ interface Ethernet4
 
 Указываем peer-link, keepalive и peer адреса соседа, локальный int для синхронизации MLAG
 
-Действие при падении peer-link - отключение всех интерфейсов
-
-на мой взгляд так же нужны recovery таймеры для защиты от флапов портов (порты могут флапать например при работах в ЦОД по восстановлению упавшего PEER-LINK)
-
-и для защиты от блэкхолинга трафика - сначала поднимутся UPLINK`и (сойдутся протоколы маршрутизации), затем поднимутся линки в MLAG в сторону хостов
+Действие при падении peer-link - отключение всех интерфейсов и recovery таймеры  - сначала поднимутся UPLINK`и (сойдутся протоколы маршрутизации), затем поднимутся линки в MLAG в сторону хостов
 
 ```
 mlag configuration
@@ -144,13 +144,14 @@ mlag configuration
    peer-address heartbeat 172.16.1.0 vrf MLAG
    peer-link Port-Channel1
    dual-primary detection delay 1 action errdisable all-interfaces
-   dual-primary recovery delay mlag 300 non-mlag 60
+   dual-primary recovery delay mlag 60 non-mlag 0
+   reload-delay mlag 60
 ```
 
 
 
+### 
 
-```
 
 
 
