@@ -8,9 +8,6 @@ transceiver qsfp default-mode 4x10G
 !
 service routing protocols model multi-agent
 !
-link tracking group CORE-TRACKING
-   recovery delay 1
-!
 hostname DC1-SW3-LEAF4
 !
 spanning-tree mode mstp
@@ -58,11 +55,11 @@ interface Ethernet6
 interface Ethernet7
 !
 interface Ethernet8
-   description [dev:DC1-SW-CE2][int:ETH2]#MLAG_PO2#
+   description [dev:DC1-SW-CE2][int:ETH2]#ESI_PO1#
    channel-group 1 mode active
 !
 interface Loopback0
-   description #UNDERLAY#
+   description #VTEP#
    ip address 10.0.0.6/32
 !
 interface Management1
@@ -90,7 +87,7 @@ ip routing vrf CST1
 router bfd
    interval 100 min-rx 100 multiplier 3 default
 !
-router bgp 64514
+router bgp 64515
    router-id 10.0.0.6
    no bgp default ipv4-unicast
    timers bgp 3 9

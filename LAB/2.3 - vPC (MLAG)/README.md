@@ -145,7 +145,6 @@ mlag configuration
    peer-link Port-Channel1
    dual-primary detection delay 1 action errdisable all-interfaces
    dual-primary recovery delay mlag 60 non-mlag 0
-   reload-delay mlag 60
 ```
 
 
@@ -165,16 +164,27 @@ mlag configuration
 
 # Проверка
 
-## Связность между конечными хостами в разных VLAN
+## Связность между конечными хостами
 
 
 
-
-## Type 1 routes
-
+## LACP
 
 
-## Type 4 routes
+
+## Multihoming
+
+
+
+### Type 1 routes
+
+
+
+### Type 4 routes
+
+
+
+## Проверка отказоустойчивости
 
 
 

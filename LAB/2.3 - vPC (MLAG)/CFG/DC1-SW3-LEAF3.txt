@@ -8,9 +8,6 @@ transceiver qsfp default-mode 4x10G
 !
 service routing protocols model multi-agent
 !
-link tracking group CORE-TRACKING
-   recovery delay 1
-!
 hostname DC1-SW3-LEAF3
 !
 spanning-tree mode mstp
@@ -60,11 +57,11 @@ interface Ethernet6
 interface Ethernet7
 !
 interface Ethernet8
-   description [dev:DC1-SW-CE2][int:ETH1]#MLAG_PO2#
+   description [dev:DC1-SW-CE2][int:ETH1]#ESI_PO1#
    channel-group 1 mode active
 !
 interface Loopback0
-   description #UNDERLAY#
+   description #VTEP#
    ip address 10.0.0.5/32
 !
 interface Management1

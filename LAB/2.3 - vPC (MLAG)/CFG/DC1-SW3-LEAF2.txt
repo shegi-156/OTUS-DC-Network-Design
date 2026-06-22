@@ -21,14 +21,15 @@ vlan 200
 !
 vlan 4000
    name [cvlan:4000][tech:MLAG]#PEER-VLA
+   trunk group PEERLINK
 !
 vrf instance CST1
    description [cst:1]#SYMMETRIC-IRB#
 !
 interface Port-Channel1
    description [dev:DC1-SW3-LEAF1][int:PO1]#MLAG_PEER-LINK#
-   switchport trunk allowed vlan 4000
    switchport mode trunk
+   switchport trunk group PEERLINK
    spanning-tree link-type point-to-point
 !
 interface Port-Channel2
@@ -104,6 +105,7 @@ interface Vxlan1
    vxlan vlan 100 vni 1
    vxlan vlan 200 vni 2
    vxlan vrf CST1 vni 3
+   vxlan learn-restrict any
 !
 ip virtual-router mac-address 00:00:00:00:11:11
 !
@@ -114,11 +116,10 @@ mlag configuration
    domain-id DC1-SW3-LEAF1-2
    local-interface Vlan4000
    peer-address 172.16.0.1
-   peer-address heartbeat 172.16.1.0
+   peer-address heartbeat 172.16.1.1
    peer-link Port-Channel1
    dual-primary detection delay 1 action errdisable all-interfaces
-   dual-primary recovery delay mlag 60 non-mlag 0
-   reload-delay mlag 60
+   dual-primary recovery delay mlag 180 non-mlag 0
 !
 router bfd
    interval 100 min-rx 100 multiplier 3 default

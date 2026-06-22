@@ -13,25 +13,25 @@ hostname DC1-SW3-SPINE1
 spanning-tree mode mstp
 !
 interface Ethernet1
-   description [dev:DC1-SW3-LEAF1][int:ETH1]
+   description [dev:DC1-SW3-LEAF1][int:ETH1]#NNI#
    mtu 9000
    no switchport
    ip address 10.0.1.0/31
 !
 interface Ethernet2
-   description [dev:DC1-SW3-LEAF2][int:ETH1]
+   description [dev:DC1-SW3-LEAF2][int:ETH1]#NNI#
    mtu 9000
    no switchport
    ip address 10.0.1.2/31
 !
 interface Ethernet3
-   description [dev:DC1-SW3-LEAF3][int:ETH1]
+   description [dev:DC1-SW3-LEAF3][int:ETH1]#NNI#
    mtu 9000
    no switchport
    ip address 10.0.1.4/31
 !
 interface Ethernet4
-   description [dev:DC1-SW3-LEAF4][int:ETH1]
+   description [dev:DC1-SW3-LEAF4][int:ETH1]#NNI#
    mtu 9000
    no switchport
    ip address 10.0.1.12/31
@@ -45,7 +45,7 @@ interface Ethernet7
 interface Ethernet8
 !
 interface Loopback0
-   description #UNDERLAY#
+   description #EVPN_TRANSIT#
    ip address 10.0.0.1/32
 !
 interface Management1
