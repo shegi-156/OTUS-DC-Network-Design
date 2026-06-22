@@ -8,6 +8,9 @@ transceiver qsfp default-mode 4x10G
 !
 service routing protocols model multi-agent
 !
+link tracking group LTG_NNI
+   recovery delay 1
+!
 hostname DC1-SW3-LEAF3
 !
 spanning-tree mode mstp
@@ -39,12 +42,14 @@ interface Ethernet1
    mtu 9000
    no switchport
    ip address 10.0.1.5/31
+   link tracking group LTG_NNI upstream
 !
 interface Ethernet2
    description [dev:DC1-SW3-SPINE2][int:ETH3]#NNI#
    mtu 9000
    no switchport
    ip address 10.0.1.11/31
+   link tracking group LTG_NNI upstream
 !
 interface Ethernet3
 !
@@ -59,6 +64,7 @@ interface Ethernet7
 interface Ethernet8
    description [dev:DC1-SW-CE2][int:ETH1]#ESI_PO1#
    channel-group 1 mode active
+   link tracking group LTG_NNI downstream
 !
 interface Loopback0
    description #VTEP#
