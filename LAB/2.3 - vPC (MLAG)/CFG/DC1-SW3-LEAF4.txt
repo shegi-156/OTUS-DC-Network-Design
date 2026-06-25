@@ -84,6 +84,7 @@ interface Vxlan1
    vxlan vlan 100 vni 1
    vxlan vlan 200 vni 2
    vxlan vrf CST1 vni 3
+   vxlan learn-restrict any
 !
 ip virtual-router mac-address 00:00:00:00:11:11
 !

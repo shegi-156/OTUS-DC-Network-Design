@@ -16,7 +16,9 @@
 
 ## Тестовая среда
 
-Схема сети в [PnetLab](..)
+Схема сети в [PnetLab](../2.3%20-%20vPC%20(MLAG)/Attached%20files/LAB_2_3%20EVPN%20VPC.unl)
+
+![alt text](../2.3%20-%20vPC%20(MLAG)/Attached%20files/LAB_2-3.png)
 
 Конфигурации сетевых элементов
 
@@ -76,8 +78,6 @@ RT = SPINE_AS + порядковый id
 ## MLAG пара
 
 > на примере DC1-SW3-LEAF1 (DC1-SW3-LEAF2 настраивается аналогично)
-
-### MLAG
 
 для KEEPALIVE - отдельный физический линк между LEAF
 
@@ -494,7 +494,7 @@ PING 192.168.200.20 (192.168.200.20) from 192.168.100.10 : 72(100) bytes of data
 
 ## Проверка отказоустойчивости
 
-при падении ETH1 DC1-SW3-CE1 видим что ICMP реквесты стали проходить через ETH2
+при падении ETH1 DC1-SW3-CE2 видим что ICMP реквесты стали проходить через ETH2
 
 ![CE2 Down ETH1](../2.3%20-%20vPC%20(MLAG)/Attached%20files/down_port_CE2.png)
 
