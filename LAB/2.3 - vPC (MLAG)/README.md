@@ -272,28 +272,232 @@ ip route vrf 200 0.0.0.0/0 192.168.200.1
 
 # Проверка
 
-## Связность между конечными хостами
-
-
-
 ## LACP
 
+```
+DC1-SW3-LEAF1#show mlag
+MLAG Configuration:
+domain-id                          :     DC1-SW3-LEAF1-2
+local-interface                    :            Vlan4000
+peer-address                       :          172.16.0.0
+peer-link                          :       Port-Channel1
+hb-peer-address                    :          172.16.1.0
+peer-config                        :          consistent
 
+MLAG Status:
+state                              :              Active
+negotiation status                 :           Connected
+peer-link status                   :                  Up
+local-int status                   :                  Up
+system-id                          :   52:70:54:d9:59:47
+dual-primary detection             :          Configured
+dual-primary interface errdisabled :               False
+
+MLAG Ports:
+Disabled                           :                   0
+Configured                         :                   0
+Inactive                           :                   0
+Active-partial                     :                   0
+Active-full                        :                   1
+```
+
+```
+DC1-SW3-LEAF1#show l2Rib output detail
+0000.0000.1111, VLAN 4000, seq 1, pref 64, peerStaticMac, source: MLAG   Port-Channel1
+5070.54d9.5947, VLAN 200, seq 1, pref 64, peerStaticMac, source: MLAG   Port-Channel1
+5070.54d9.5947, VLAN 4000, seq 1, pref 64, peerStaticMac, source: MLAG   Port-Channel1
+5070.54d9.5947, VLAN 100, seq 1, pref 64, peerStaticMac, source: MLAG   Port-Channel1
+5071.e982.5513, VLAN 100, seq 1, pref 16, evpnDynamicRemoteMac, source: BGP
+   Load Balance entry 15: 2-way
+      VTEP 10.0.0.5
+      VTEP 10.0.0.6
+5070.54d9.5947, VLAN 4094, seq 1, pref 64, peerStaticMac, source: MLAG   Port-Channel1
+0000.0000.1111, VLAN 4094, seq 1, pref 64, peerStaticMac, source: MLAG   Port-Channel1
+5071.e982.5513, VLAN 200, seq 1, pref 16, evpnDynamicRemoteMac, source: BGP
+   Load Balance entry 15: 2-way
+      VTEP 10.0.0.5
+      VTEP 10.0.0.6
+50a8.ec8a.deef, VLAN 200, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic   Port-Channel2
+50a8.ec8a.deef, VLAN 100, seq 1, pref 16, learnedDynamicMac, source: Local Dynamic   Port-Channel2
+```
+
+```
+DC1-SW3-LEAF2#show ip route vrf CST1
+ B E      192.168.100.20/32 [20/0] via VTEP 10.0.0.5 VNI 3 router-mac 50:6d:26:f2:3c:e0 local-interface Vxlan1
+                                   via VTEP 10.0.0.6 VNI 3 router-mac 50:63:37:d5:4e:05 local-interface Vxlan1
+ C        192.168.100.0/24 is directly connected, Vlan100
+ B E      192.168.200.20/32 [20/0] via VTEP 10.0.0.5 VNI 3 router-mac 50:6d:26:f2:3c:e0 local-interface Vxlan1
+                                   via VTEP 10.0.0.6 VNI 3 router-mac 50:63:37:d5:4e:05 local-interface Vxlan1
+ C        192.168.200.0/24 is directly connected, Vlan200
+```
 
 ## Multihoming
 
+```
+DC1-SW3-LEAF3#show bgp evpn instance
+EVPN instance: VLAN-aware bundle CST1
+  Route distinguisher: 10.0.0.5:1
+  Route target import: Route-Target-AS:64512:1
+  Route target export: Route-Target-AS:64512:1
+  Service interface: VLAN-aware bundle
+  Local VXLAN IP address: 10.0.0.5
+  VXLAN: enabled
+  MPLS: disabled
+  Local ethernet segment:
+    ESI: 0000:0000:0000:0000:1111
+      Interface: Port-Channel1
+      Mode: all-active
+      State: up
+      ES-Import RT: 00:00:00:00:00:01
+      DF election algorithm: preference
+      Designated forwarder: 10.0.0.5
+      Non-Designated forwarder: 10.0.0.6
+```
+
+```
+DC1-SW3-LEAF4#show bgp evpn instance
+EVPN instance: VLAN-aware bundle CST1
+  Route distinguisher: 10.0.0.6:1
+  Route target import: Route-Target-AS:64512:1
+  Route target export: Route-Target-AS:64512:1
+  Service interface: VLAN-aware bundle
+  Local VXLAN IP address: 10.0.0.6
+  VXLAN: enabled
+  MPLS: disabled
+  Local ethernet segment:
+    ESI: 0000:0000:0000:0000:1111
+      Interface: Port-Channel1
+      Mode: all-active
+      State: up
+      ES-Import RT: 00:00:00:00:00:01
+      DF election algorithm: preference
+      Designated forwarder: 10.0.0.5
+      Non-Designated forwarder: 10.0.0.6
+```
 
 
 ### Type 1 routes
 
+```
+DC1-SW3-LEAF2#show bgp evpn route-type auto-discovery
+BGP routing table information for VRF default
+Router identifier 10.0.0.4, local AS number 64513
+Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
+                    c - Contributing to ECMP, % - Pending BGP convergence
+Origin codes: i - IGP, e - EGP, ? - incomplete
+AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
 
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >Ec    RD: 10.0.0.5:1 auto-discovery 1 0000:0000:0000:0000:1111
+                                 10.0.0.5              -       100     0       64512 64514 i
+ *  ec    RD: 10.0.0.5:1 auto-discovery 1 0000:0000:0000:0000:1111
+                                 10.0.0.5              -       100     0       64512 64514 i
+ * >Ec    RD: 10.0.0.6:1 auto-discovery 1 0000:0000:0000:0000:1111
+                                 10.0.0.6              -       100     0       64512 64515 i
+ *  ec    RD: 10.0.0.6:1 auto-discovery 1 0000:0000:0000:0000:1111
+                                 10.0.0.6              -       100     0       64512 64515 i
+ * >Ec    RD: 10.0.0.5:1 auto-discovery 2 0000:0000:0000:0000:1111
+                                 10.0.0.5              -       100     0       64512 64514 i
+ *  ec    RD: 10.0.0.5:1 auto-discovery 2 0000:0000:0000:0000:1111
+                                 10.0.0.5              -       100     0       64512 64514 i
+ * >Ec    RD: 10.0.0.6:1 auto-discovery 2 0000:0000:0000:0000:1111
+                                 10.0.0.6              -       100     0       64512 64515 i
+ *  ec    RD: 10.0.0.6:1 auto-discovery 2 0000:0000:0000:0000:1111
+                                 10.0.0.6              -       100     0       64512 64515 i
+ * >Ec    RD: 10.0.0.5:1 auto-discovery 0000:0000:0000:0000:1111
+                                 10.0.0.5              -       100     0       64512 64514 i
+ *  ec    RD: 10.0.0.5:1 auto-discovery 0000:0000:0000:0000:1111
+                                 10.0.0.5              -       100     0       64512 64514 i
+ * >Ec    RD: 10.0.0.6:1 auto-discovery 0000:0000:0000:0000:1111
+                                 10.0.0.6              -       100     0       64512 64515 i
+ *  ec    RD: 10.0.0.6:1 auto-discovery 0000:0000:0000:0000:1111
+                                 10.0.0.6              -       100     0       64512 64515 i
+```
 
 ### Type 4 routes
 
+```
+DC1-SW3-LEAF3#show bgp evpn route-type ethernet-segment
+BGP routing table information for VRF default
+Router identifier 10.0.0.5, local AS number 64514
+Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
+                    c - Contributing to ECMP, % - Pending BGP convergence
+Origin codes: i - IGP, e - EGP, ? - incomplete
+AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
 
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >      RD: 10.0.0.5:1 ethernet-segment 0000:0000:0000:0000:1111 10.0.0.5
+                                 -                     -       -       0       i
+ * >Ec    RD: 10.0.0.6:1 ethernet-segment 0000:0000:0000:0000:1111 10.0.0.6
+                                 10.0.0.6              -       100     0       64512 64515 i
+ *  ec    RD: 10.0.0.6:1 ethernet-segment 0000:0000:0000:0000:1111 10.0.0.6
+                                 10.0.0.6              -       100     0       64512 64515 i
+```
+
+```
+DC1-SW3-LEAF4#show bgp evpn route-type ethernet-segment
+BGP routing table information for VRF default
+Router identifier 10.0.0.6, local AS number 64515
+Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
+                    c - Contributing to ECMP, % - Pending BGP convergence
+Origin codes: i - IGP, e - EGP, ? - incomplete
+AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
+
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >Ec    RD: 10.0.0.5:1 ethernet-segment 0000:0000:0000:0000:1111 10.0.0.5
+                                 10.0.0.5              -       100     0       64512 64514 i
+ *  ec    RD: 10.0.0.5:1 ethernet-segment 0000:0000:0000:0000:1111 10.0.0.5
+                                 10.0.0.5              -       100     0       64512 64514 i
+ * >      RD: 10.0.0.6:1 ethernet-segment 0000:0000:0000:0000:1111 10.0.0.6
+                                 -                     -       -       0       i
+```
+
+## Связность между конечными хостами
+
+VLAN 100 (L2 VNI - 1) **DC1-SW3-CE1 <> DC1-SW3-CE2** 
+
+```
+DC1-SW3-CE1#ping vrf 100 192.168.100.20 source 192.168.100.10
+PING 192.168.100.20 (192.168.100.20) from 192.168.100.10 : 72(100) bytes of data.
+80 bytes from 192.168.100.20: icmp_seq=1 ttl=64 time=30.2 ms
+80 bytes from 192.168.100.20: icmp_seq=2 ttl=64 time=27.8 ms
+80 bytes from 192.168.100.20: icmp_seq=3 ttl=64 time=27.7 ms
+80 bytes from 192.168.100.20: icmp_seq=4 ttl=64 time=26.9 ms
+80 bytes from 192.168.100.20: icmp_seq=5 ttl=64 time=28.5 ms
+```
+
+VLAN 200 (L2 VNI - 2) **DC1-SW3-CE1 <> DC1-SW3-CE2**
+
+```
+DC1-SW3-CE1#ping vrf 200 192.168.200.20 source 192.168.200.10
+PING 192.168.200.20 (192.168.200.20) from 192.168.200.10 : 72(100) bytes of data.
+80 bytes from 192.168.200.20: icmp_seq=1 ttl=64 time=224 ms
+80 bytes from 192.168.200.20: icmp_seq=2 ttl=64 time=221 ms
+80 bytes from 192.168.200.20: icmp_seq=3 ttl=64 time=316 ms
+80 bytes from 192.168.200.20: icmp_seq=4 ttl=64 time=312 ms
+80 bytes from 192.168.200.20: icmp_seq=5 ttl=64 time=396 ms
+```
+
+VRF CST1 (L3 VNI - 3) **DC1-SW3-CE1 <> DC1-SW3-CE2**
+
+```
+DC1-SW3-CE1#ping vrf 100 192.168.200.20 source 192.168.100.10
+PING 192.168.200.20 (192.168.200.20) from 192.168.100.10 : 72(100) bytes of data.
+80 bytes from 192.168.200.20: icmp_seq=1 ttl=62 time=76.0 ms
+80 bytes from 192.168.200.20: icmp_seq=2 ttl=62 time=77.4 ms
+80 bytes from 192.168.200.20: icmp_seq=3 ttl=62 time=73.3 ms
+80 bytes from 192.168.200.20: icmp_seq=4 ttl=62 time=70.0 ms
+80 bytes from 192.168.200.20: icmp_seq=5 ttl=62 time=66.9 ms
+```
+
+![VRF CST1](../2.3%20-%20vPC%20(MLAG)/Attached%20files/Ping_VRF_CST1.png)
 
 ## Проверка отказоустойчивости
 
+при падении ETH1 DC1-SW3-CE1 видим что ICMP реквесты стали проходить через ETH2
 
+![CE2 Down ETH1](../2.3%20-%20vPC%20(MLAG)/Attached%20files/down_port_CE2.png)
 
-## Дамп трафика
+при падении ETH2 DC1-SW3-CE1 видим что реквесты стали проходить через ETH1
+
+![CE1 Down ETH2](../2.3%20-%20vPC%20(MLAG)/Attached%20files/down_port_CE1.png)
